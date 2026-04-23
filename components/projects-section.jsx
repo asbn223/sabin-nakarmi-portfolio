@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ExternalLink, Github } from 'react-icons/fa';
+import { FiGithub, FiExternalLink } from 'react-icons/fi';
 
 function useInView(options) {
   const [ref, setRef] = useState(null);
@@ -243,7 +243,7 @@ export function ProjectsSection() {
                         href="#"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-200"
                       >
-                        <ExternalLink className="text-xs" />
+                        <FiExternalLink className="text-xs" />
                         View Project
                       </a>
                     </div>

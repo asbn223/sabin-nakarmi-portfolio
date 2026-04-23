@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Hero3DScene } from './hero-3d-scene';
-import { ChevronDown } from 'react-icons/fa';
 
 export function HeroSection() {
   const containerVariants = {
@@ -84,7 +83,7 @@ export function HeroSection() {
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <ChevronDown className="text-primary/50 text-2xl" />
+        <span className="text-primary/50 text-3xl">↓</span>
       </motion.div>
     </section>
   );

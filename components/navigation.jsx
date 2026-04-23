@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X } from 'react-icons/fa';
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,9 +83,9 @@ export function Navigation() {
               aria-label="Toggle menu"
             >
               {isOpen ? (
-                <X className="text-xl text-foreground" />
+                <span className="text-2xl text-foreground">✕</span>
               ) : (
-                <Menu className="text-xl text-foreground" />
+                <span className="text-2xl text-foreground">☰</span>
               )}
             </button>
           </div>

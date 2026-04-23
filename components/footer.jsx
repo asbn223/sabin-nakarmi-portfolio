@@ -1,6 +1,6 @@
 'use client';
 
-import { Github, Linkedin, Mail, ExternalLink } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,17 +9,17 @@ export function Footer() {
     {
       name: 'GitHub',
       url: '#',
-      icon: Github,
+      icon: FaGithub,
     },
     {
       name: 'LinkedIn',
       url: '#',
-      icon: Linkedin,
+      icon: FaLinkedin,
     },
     {
       name: 'Email',
       url: 'mailto:sabin.nakarmi@example.com',
-      icon: Mail,
+      icon: FaEnvelope,
     },
   ];
 
