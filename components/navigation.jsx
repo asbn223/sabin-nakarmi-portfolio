@@ -12,8 +12,28 @@ export function Navigation() {
       setIsScrolled(window.scrollY > 50);
     };
 
+    const handleNavClick = (e) => {
+      const href = e.currentTarget.getAttribute('href');
+      if (href?.startsWith('#')) {
+        e.preventDefault();
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          setIsOpen(false);
+        }
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // Add click handlers to all nav links
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+    navLinks.forEach(link => link.addEventListener('click', handleNavClick));
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      navLinks.forEach(link => link.removeEventListener('click', handleNavClick));
+    };
   }, []);
 
   const navItems = [

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { FiGithub, FiExternalLink } from 'react-icons/fi';
+import { FaApple, FaGooglePlay } from 'react-icons/fa';
 
 function useInView(options) {
   const [ref, setRef] = useState(null);
@@ -115,12 +115,6 @@ const projects = [
     category: 'Mobile',
     link: 'https://apps.apple.com/us/app/boudha-stupa-thanka-center/id1234567890',
   },
-  {
-    title: 'Doctor Appointment System',
-    description: 'Healthcare solution enabling appointment booking with doctors. Focused on streamlining healthcare processes and improving patient-doctor connectivity.',
-    technologies: ['Flutter', 'Healthcare', 'Appointment System', 'Scheduling'],
-    category: 'Mobile',
-  },
 ];
 
 export function ProjectsSection() {
@@ -225,16 +219,33 @@ export function ProjectsSection() {
                       )}
                     </div>
 
-                    {/* Links */}
-                    <div className="flex gap-3 pt-2">
-                      <a
-                        href="#"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-200"
-                      >
-                        <FiExternalLink className="text-xs" />
-                        View Project
-                      </a>
-                    </div>
+                    {/* Store Links */}
+                    {project.link && (
+                      <div className="flex gap-3 pt-2">
+                        {project.link.includes('play.google.com') && (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-200"
+                            title="Google Play Store"
+                          >
+                            <FaGooglePlay className="text-lg" />
+                          </a>
+                        )}
+                        {project.link.includes('apps.apple.com') && (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-200"
+                            title="Apple App Store"
+                          >
+                            <FaApple className="text-lg" />
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

@@ -94,12 +94,9 @@ export function Footer() {
         <div className="border-t border-border mb-8"></div>
 
         {/* Bottom Footer */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground">
           <p>
             © {currentYear} Sabin Nakarmi. All rights reserved.
-          </p>
-          <p>
-            Built with <span className="text-primary">Next.js</span>, <span className="text-primary">React</span>, and <span className="text-primary">Tailwind CSS</span>
           </p>
         </div>
       </div>
