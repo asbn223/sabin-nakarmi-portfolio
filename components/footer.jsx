@@ -8,17 +8,17 @@ export function Footer() {
   const socialLinks = [
     {
       name: 'GitHub',
-      url: '#',
+      url: 'https://github.com/asbn223',
       icon: FaGithub,
     },
     {
       name: 'LinkedIn',
-      url: '#',
+      url: 'https://www.linkedin.com/in/sabin-nakarmi-57541317b/',
       icon: FaLinkedin,
     },
     {
       name: 'Email',
-      url: 'mailto:sabin.nakarmi@example.com',
+      url: 'mailto:asbn2231@gmail.com',
       icon: FaEnvelope,
     },
   ];
@@ -28,7 +28,6 @@ export function Footer() {
     { name: 'Experience', url: '#experience' },
     { name: 'Projects', url: '#projects' },
     { name: 'Skills', url: '#skills' },
-    { name: 'Contact', url: '#contact' },
   ];
 
   return (
@@ -42,7 +41,7 @@ export function Footer() {
               Sabin Nakarmi
             </h3>
             <p className="text-sm text-muted-foreground">
-              Senior Flutter Developer & Technical Team Lead. Building scalable mobile solutions and leading high-performance teams.
+              Team Lead & Full Stack Mobile Developer. Building scalable mobile solutions and leading high-performance teams.
             </p>
           </div>
 

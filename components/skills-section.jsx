@@ -77,7 +77,7 @@ export function SkillsSection() {
   };
 
   return (
-    <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
+    <section id="skills" ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-6xl mx-auto">
         <motion.div
           variants={containerVariants}

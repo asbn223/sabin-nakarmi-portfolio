@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 
+const CV_PATH = '/Sabin_Nakarmi_CV.pdf';
+
 function useInView(options) {
   const [ref, setRef] = useState(null);
   const [inView, setInView] = useState(false);
@@ -45,7 +47,7 @@ export function AboutSection() {
   };
 
   return (
-    <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
+    <section  id="about" ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-6xl mx-auto">
         <motion.div
           variants={containerVariants}
@@ -80,10 +82,13 @@ export function AboutSection() {
 
               <div className="flex gap-4 pt-4">
                 <a
-                  href="#resume"
-                  className="inline-block px-6 py-2 rounded-lg bg-secondary/10 text-secondary border border-secondary hover:bg-secondary/20 transition-colors duration-200 font-medium"
+                    href={CV_PATH}
+                    download="Sabin_Nakarmi_CV.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-8 py-3 rounded-md bg-violet-600 text-white font-medium hover:bg-violet-500 transition-colors"
                 >
-                  Download Resume
+                  Download CV
                 </a>
               </div>
             </motion.div>

@@ -40,8 +40,9 @@ export function Navigation() {
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },
     { label: 'Experience', href: '#experience' },
-    { label: 'Projects', href: '#projects' },
     { label: 'Skills', href: '#skills' },
+    { label: 'Projects', href: '#projects' },
+
   ];
 
   const menuVariants = {
@@ -89,7 +90,7 @@ export function Navigation() {
                 </a>
               ))}
               <a
-                href="mailto:sabin.nakarmi@example.com"
+                href="mailto:asbn2231@gmail.com"
                 className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 font-medium text-sm"
               >
                 Contact
@@ -136,7 +137,7 @@ export function Navigation() {
               </motion.a>
             ))}
             <motion.a
-              href="mailto:sabin.nakarmi@example.com"
+              href="mailto:asbn2231@gmail.com"
               custom={navItems.length}
               variants={itemVariants}
               onClick={() => setIsOpen(false)}
