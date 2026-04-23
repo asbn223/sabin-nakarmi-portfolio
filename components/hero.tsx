@@ -113,7 +113,7 @@ export default function Hero() {
                 >
           <span
               className="inline-block py-1 px-4 rounded-full border border-cyan-400/40 text-cyan-300 text-sm font-medium mb-8 tracking-wide">
-            Senior Flutter Developer | Lead
+           Team Lead | Full Stack Mobile Developer
           </span>
 
                     <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-tight">
@@ -124,8 +124,8 @@ export default function Hero() {
                     </h1>
 
                     <p className="text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
-                        Crafting pixel-perfect UIs and architecting scalable cross-platform mobile
-                        applications. Based in Kathmandu, shipping globally.
+                        Building scalable mobile applications and leading high-performance development teams.
+                        Specialized in Flutter, cross-platform architecture, and technical leadership.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
