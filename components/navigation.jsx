@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Image from "next/image";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,7 +76,13 @@ export function Navigation() {
               href="#home"
               className="font-space-grotesk text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent hover:opacity-80 transition-opacity"
             >
-              SN.
+              <Image
+                  src='/logo.png'
+                  alt='SN.'
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  width={100}
+                  height={100}
+              />
             </a>
 
             {/* Desktop Menu */}
