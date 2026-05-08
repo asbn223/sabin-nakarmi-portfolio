@@ -1,68 +1,86 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const CV_PATH = '/Sabin_Nakarmi_CV.pdf';
 
-function useInView(options) {
-  const [ref, setRef] = useState(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    if (!ref) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setInView(true);
-        if (options.triggerOnce) {
-          observer.unobserve(entry.target);
-        }
-      }
-    }, { threshold: options.threshold || 0.1 });
-
-    observer.observe(ref);
-    return () => observer.disconnect();
-  }, [ref, options]);
-
-  return { ref: setRef, inView };
-}
+gsap.registerPlugin(ScrollTrigger);
 
 export function AboutSection() {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const contentRef = useRef(null);
+  const cardsRef = useRef(null);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
+    const ctx = gsap.context(() => {
+      // Heading reveal
+      gsap.from(headingRef.current, {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
+      // Left content (bio text + CV button) stagger
+      gsap.from(contentRef.current.children, {
+        y: 50,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: contentRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
+      // Right cards stagger with slight scale
+      gsap.from(cardsRef.current.children, {
+        y: 60,
+        opacity: 0,
+        scale: 0.96,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: cardsRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section  id="about" ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-        >
-          <motion.div variants={itemVariants} className="mb-12">
+      <section
+          id="about"
+          ref={sectionRef}
+          className="py-20 px-4 sm:px-6 lg:px-8 bg-background"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div ref={headingRef} className="mb-12">
             <h2 className="font-space-grotesk text-4xl md:text-5xl font-bold text-foreground mb-2">
               About Me
             </h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent"></div>
-          </motion.div>
+            <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent" />
+          </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div variants={itemVariants} className="space-y-6">
+            <div ref={contentRef} className="space-y-6">
               <p className="text-lg text-muted-foreground leading-relaxed">
                 I&apos;m a Senior Flutter Developer and Technical Team Lead with 8+ years of experience
                 building high-performance mobile applications. I specialize in creating scalable,
@@ -91,9 +109,9 @@ export function AboutSection() {
                   Download CV
                 </a>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} className="space-y-8">
+            <div ref={cardsRef} className="space-y-8">
               <div className="bg-card rounded-lg p-6 border border-border hover:border-primary/50 transition-colors duration-200">
                 <h3 className="font-space-grotesk text-xl font-bold text-foreground mb-2">
                   Technical Leadership
@@ -123,11 +141,9 @@ export function AboutSection() {
                   with expertise in modern DevOps practices.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
   );
 }
-

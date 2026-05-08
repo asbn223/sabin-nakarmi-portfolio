@@ -5,17 +5,19 @@ import { ExperienceSection } from '@/components/experience-section';
 import { SkillsSection } from '@/components/skills-section';
 import { ProjectsSection } from '@/components/projects-section';
 import { Footer } from '@/components/footer';
+import {ScrollProgress} from "@/components/scroll-progress";
 
 export default function Home() {
-  return (
-    <main className="w-full min-h-screen bg-background text-foreground">
-      <Navigation />
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <SkillsSection />
-      <ProjectsSection />
-      <Footer />
-    </main>
-  );
+    return (
+        <>
+            <ScrollProgress />
+            <Navigation />
+            <HeroSection />
+            <AboutSection />
+            <ExperienceSection />
+            <SkillsSection />
+            <ProjectsSection />
+            <Footer />
+        </>
+    );
 }

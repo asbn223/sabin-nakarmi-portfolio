@@ -1,10 +1,11 @@
-import type { Metadata } from 'next'
-import { Space_Grotesk, Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import './globals.css'
+import type { Metadata } from 'next';
+import { Space_Grotesk, Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
+import { SmoothScrollProvider } from './providers/smooth-scroll-provider';
+import './globals.css';
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: '--font-space-grotesk' });
-const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Sabin Nakarmi | Senior Flutter Developer & Lead',
@@ -23,21 +24,17 @@ export const metadata: Metadata = {
     icon: '/logo.png',
     apple: '/apple-icon.png',
   },
-}
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`} style={{ colorScheme: 'dark' }}>
-      <body className="font-inter bg-background text-foreground antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+      <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+      <body className="antialiased bg-background text-foreground">
+      <SmoothScrollProvider>{children}</SmoothScrollProvider>
+      {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
-    </html>
-  )
+      </html>
+  );
 }
 
 export const runtime = 'edge';

@@ -1,8 +1,9 @@
 'use client';
 
-import {useRef, useEffect, useState} from 'react';
-import {motion} from 'framer-motion';
-import {FaApple, FaGooglePlay} from 'react-icons/fa';
+import { useRef, useEffect, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { FaApple, FaGooglePlay } from 'react-icons/fa';
 import Image from 'next/image';
 import * as THREE from 'three';
 
@@ -130,27 +131,7 @@ const tagColors = [
     'bg-amber-500/10 text-amber-300 border-amber-500/20',
 ];
 
-function useInView({triggerOnce = false, threshold = 0.1} = {}) {
-    const [ref, setRef] = useState(null);
-    const [inView, setInView] = useState(false);
-
-    useEffect(() => {
-        if (!ref) return;
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setInView(true);
-                    if (triggerOnce) observer.unobserve(entry.target);
-                }
-            },
-            {threshold}
-        );
-        observer.observe(ref);
-        return () => observer.disconnect();
-    }, [ref, triggerOnce, threshold]);
-
-    return {ref: setRef, inView};
-}
+gsap.registerPlugin(ScrollTrigger);
 
 function NodeGraphBackground() {
     const canvasRef = useRef(null);
@@ -162,7 +143,7 @@ function NodeGraphBackground() {
         const W = canvas.offsetWidth;
         const H = canvas.offsetHeight;
 
-        const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(W, H);
         renderer.setClearColor(0x000000, 0);
@@ -173,11 +154,13 @@ function NodeGraphBackground() {
 
         const NODE_COUNT = 60;
         const spread = 22;
-        const nodePositions = Array.from({length: NODE_COUNT}, () => new THREE.Vector3(
-            (Math.random() - 0.5) * spread,
-            (Math.random() - 0.5) * spread,
-            (Math.random() - 0.5) * 8,
-        ));
+        const nodePositions = Array.from({ length: NODE_COUNT }, () =>
+            new THREE.Vector3(
+                (Math.random() - 0.5) * spread,
+                (Math.random() - 0.5) * spread,
+                (Math.random() - 0.5) * 8
+            )
+        );
 
         const nodeGeo = new THREE.BufferGeometry();
         const nodePosArr = new Float32Array(NODE_COUNT * 3);
@@ -213,14 +196,14 @@ function NodeGraphBackground() {
         scene.add(new THREE.LineSegments(edgeGeo, edgeMat));
 
         const accentGeo = new THREE.SphereGeometry(0.12, 8, 8);
-        const accentMat = new THREE.MeshBasicMaterial({color: 0xa78bfa});
+        const accentMat = new THREE.MeshBasicMaterial({ color: 0xa78bfa });
         [0, 7, 15, 23, 40].forEach((idx) => {
             const m = new THREE.Mesh(accentGeo, accentMat);
             m.position.copy(nodePositions[idx]);
             scene.add(m);
         });
 
-        const mouse = {x: 0, y: 0};
+        const mouse = { x: 0, y: 0 };
         const handleMouseMove = (e) => {
             mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
             mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
@@ -238,7 +221,6 @@ function NodeGraphBackground() {
 
         let animId;
         const clock = new THREE.Clock();
-
         const animate = () => {
             animId = requestAnimationFrame(animate);
             const t = clock.getElapsedTime();
@@ -260,33 +242,50 @@ function NodeGraphBackground() {
         <canvas
             ref={canvasRef}
             className="absolute inset-0 w-full h-full"
-            style={{pointerEvents: 'none'}}
+            style={{ pointerEvents: 'none' }}
         />
     );
 }
 
-function ProjectCard({project, index}) {
+function ProjectCard({ project, index }) {
+    const cardRef = useRef(null);
     const isEven = index % 2 === 0;
 
+    useEffect(() => {
+        const card = cardRef.current;
+        if (!card) return;
+
+        const ctx = gsap.context(() => {
+            gsap.from(card, {
+                y: 50,
+                opacity: 0,
+                scale: 0.97,
+                duration: 0.7,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 88%',
+                    toggleActions: 'play none none reverse',
+                },
+            });
+        }, card);
+
+        return () => ctx.revert();
+    }, []);
+
     return (
-        <motion.div
-            variants={{
-                hidden: {opacity: 0, y: 32},
-                visible: {opacity: 1, y: 0, transition: {duration: 0.55, ease: 'easeOut'}},
-            }}
+        <div
+            ref={cardRef}
             className="group relative rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm overflow-hidden hover:border-sky-500/30 hover:bg-white/[0.06] transition-all duration-500 flex flex-col"
         >
-            {/* Featured ribbon */}
             {project.featured && (
                 <div className="absolute top-4 right-4 z-10">
-          <span
-              className="font-space-grotesk text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20">
+          <span className="font-space-grotesk text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20">
             Featured
           </span>
                 </div>
             )}
 
-            {/* Image or gradient placeholder */}
             <div className="relative w-full h-44 overflow-hidden">
                 {project.image ? (
                     <Image
@@ -309,10 +308,9 @@ function ProjectCard({project, index}) {
             </span>
                     </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07090f] via-transparent to-transparent"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07090f] via-transparent to-transparent" />
             </div>
 
-            {/* Content */}
             <div className="flex flex-col flex-1 p-5">
                 <h3 className="font-space-grotesk text-base font-bold text-white mb-1.5 leading-snug group-hover:text-sky-300 transition-colors duration-300">
                     {project.title}
@@ -322,7 +320,6 @@ function ProjectCard({project, index}) {
                     {project.description}
                 </p>
 
-                {/* Tech tags */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
                     {project.technologies.slice(0, 3).map((tech, i) => (
                         <span
@@ -339,7 +336,6 @@ function ProjectCard({project, index}) {
                     )}
                 </div>
 
-                {/* Store buttons */}
                 {(project.app_link || project.play_link) && (
                     <div className="flex gap-2 pt-3 border-t border-white/[0.06]">
                         {project.app_link && (
@@ -349,7 +345,7 @@ function ProjectCard({project, index}) {
                                 rel="noopener noreferrer"
                                 className="font-space-grotesk flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-sky-400/30 text-slate-300 hover:text-white transition-all duration-200"
                             >
-                                <FaApple className="text-sm"/>
+                                <FaApple className="text-sm" />
                                 App Store
                             </a>
                         )}
@@ -360,19 +356,21 @@ function ProjectCard({project, index}) {
                                 rel="noopener noreferrer"
                                 className="font-space-grotesk flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-violet-400/30 text-slate-300 hover:text-white transition-all duration-200"
                             >
-                                <FaGooglePlay className="text-sm"/>
+                                <FaGooglePlay className="text-sm" />
                                 Play Store
                             </a>
                         )}
                     </div>
                 )}
             </div>
-        </motion.div>
+        </div>
     );
 }
 
 export function ProjectsSection() {
-    const {ref, inView} = useInView({triggerOnce: true, threshold: 0.05});
+    const sectionRef = useRef(null);
+    const headingRef = useRef(null);
+    const gridRef = useRef(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [showAll, setShowAll] = useState(false);
 
@@ -380,103 +378,108 @@ export function ProjectsSection() {
     const filtered = selectedCategory === 'All'
         ? projects
         : projects.filter((p) => p.category === selectedCategory);
-
     const visible = showAll ? filtered : filtered.slice(0, 6);
 
-    const containerVariants = {
-        hidden: {opacity: 0},
-        visible: {opacity: 1, transition: {staggerChildren: 0.07}},
-    };
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const ctx = gsap.context(() => {
+            gsap.from(headingRef.current, {
+                y: 40,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: headingRef.current,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse',
+                },
+            });
+
+            if (gridRef.current) {
+                gsap.from(gridRef.current, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: gridRef.current,
+                        start: 'top 90%',
+                        toggleActions: 'play none none reverse',
+                    },
+                });
+            }
+        }, section);
+
+        return () => ctx.revert();
+    }, []);
 
     return (
         <section
             id="projects"
-            ref={ref}
+            ref={sectionRef}
             className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#07090f]"
         >
             <div className="absolute inset-0 opacity-50 pointer-events-none">
-                <NodeGraphBackground/>
+                <NodeGraphBackground />
             </div>
 
-            <div
-                className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#07090f] to-transparent pointer-events-none"/>
-            <div
-                className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07090f] to-transparent pointer-events-none"/>
-            <div
-                className="absolute left-1/2 top-0 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-sky-500/30 to-transparent"/>
+            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#07090f] to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07090f] to-transparent pointer-events-none" />
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-sky-500/30 to-transparent" />
 
             <div className="relative z-10 max-w-6xl mx-auto">
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate={inView ? 'visible' : 'hidden'}
-                >
-                    {/* Heading */}
-                    <motion.div
-                        variants={{hidden: {opacity: 0, y: 20}, visible: {opacity: 1, y: 0}}}
-                        className="mb-14"
-                    >
-                        <p className="font-space-grotesk text-sky-400 text-sm font-mono tracking-widest uppercase mb-3">
-                            What I&apos;ve Built
-                        </p>
-                        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-                            <div>
-                                <h2 className="font-space-grotesk text-4xl md:text-5xl font-bold text-white mb-4">
-                                    Featured Projects
-                                </h2>
-                                <div className="h-px w-24 bg-gradient-to-r from-sky-400 to-violet-400"/>
-                            </div>
-
-                            {/* Category filter */}
-                            <div className="flex gap-2">
-                                {categories.map((cat) => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => {
-                                            setSelectedCategory(cat);
-                                            setShowAll(false);
-                                        }}
-                                        className={`font-space-grotesk px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
-                                            selectedCategory === cat
-                                                ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
-                                                : 'bg-white/5 text-slate-400 border-white/10 hover:border-white/20 hover:text-white'
-                                        }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
+                <div ref={headingRef} className="mb-14">
+                    <p className="font-space-grotesk text-sky-400 text-sm font-mono tracking-widest uppercase mb-3">
+                        What I've Built
+                    </p>
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+                        <div>
+                            <h2 className="font-space-grotesk text-4xl md:text-5xl font-bold text-white mb-4">
+                                Featured Projects
+                            </h2>
+                            <div className="h-px w-24 bg-gradient-to-r from-sky-400 to-violet-400" />
                         </div>
-                    </motion.div>
 
-                    {/* Grid */}
-                    <motion.div
-                        className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate={inView ? 'visible' : 'hidden'}
-                    >
-                        {visible.map((project, index) => (
-                            <ProjectCard key={index} project={project} index={index}/>
-                        ))}
-                    </motion.div>
+                        <div className="flex gap-2">
+                            {categories.map((cat) => (
+                                <button
+                                    key={cat}
+                                    onClick={() => {
+                                        setSelectedCategory(cat);
+                                        setShowAll(false);
+                                    }}
+                                    className={`font-space-grotesk px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
+                                        selectedCategory === cat
+                                            ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                                            : 'bg-white/5 text-slate-400 border-white/10 hover:border-white/20 hover:text-white'
+                                    }`}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
 
-                    {/* Show more / less */}
-                    {filtered.length > 6 && (
-                        <motion.div
-                            variants={{hidden: {opacity: 0}, visible: {opacity: 1}}}
-                            className="mt-12 text-center"
+                <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {visible.map((project, index) => (
+                        <ProjectCard key={index} project={project} index={index} />
+                    ))}
+                </div>
+
+                {filtered.length > 6 && (
+                    <div className="mt-12 text-center">
+                        <button
+                            onClick={() => setShowAll((prev) => !prev)}
+                            className="font-space-grotesk inline-flex items-center gap-2 px-8 py-3 rounded-xl border border-sky-500/30 text-sky-300 hover:bg-sky-500/10 font-medium text-sm transition-all duration-200"
                         >
-                            <button
-                                onClick={() => setShowAll((prev) => !prev)}
-                                className="font-space-grotesk inline-flex items-center gap-2 px-8 py-3 rounded-xl border border-sky-500/30 text-sky-300 hover:bg-sky-500/10 font-medium text-sm transition-all duration-200"
-                            >
-                                {showAll ? 'Show Less' : `View All ${filtered.length} Projects`}
-                                <span className="text-lg leading-none">{showAll ? '↑' : '↓'}</span>
-                            </button>
-                        </motion.div>
-                    )}
-                </motion.div>
+                            {showAll ? 'Show Less' : `View All ${filtered.length} Projects`}
+                            <span className="text-lg leading-none">{showAll ? '↑' : '↓'}</span>
+                        </button>
+                    </div>
+                )}
             </div>
         </section>
     );

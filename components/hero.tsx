@@ -112,18 +112,18 @@ export default function Hero() {
                     transition={{duration: 0.8, ease: 'easeOut'}}
                 >
           <span
-              className="inline-block py-1 px-4 rounded-full border border-cyan-400/40 text-cyan-300 text-sm font-medium mb-8 tracking-wide">
+              className="hero-title-line block py-1 px-4 rounded-full border border-cyan-400/40 text-cyan-300 text-sm font-medium mb-8 tracking-wide">
            Team Lead | Full Stack Mobile Developer
           </span>
 
-                    <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-tight">
+                    <h1 className="hero-title-line block text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-tight">
                         Hi, I&apos;m{' '}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
               Sabin Nakarmi
             </span>
                     </h1>
 
-                    <p className="text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
+                    <p className="hero-title-line text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
                         Building scalable mobile applications and leading high-performance development teams.
                         Specialized in Flutter, cross-platform architecture, and technical leadership.
                     </p>
